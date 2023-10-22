@@ -42,3 +42,8 @@ PDC stands for PersistentDataContainer, this allows QuickNick to save the nickna
 
 ## What is SQL?
 SQL is a form of Database storage which can be accessed from multiple servers, if you have multiple servers connected to the SQL server then nicknames can be synced.
+
+# GitHub
+Here are some instructions for some GitHub things some people may want to mess with
+
+## Getting development builds
