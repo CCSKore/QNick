@@ -1,0 +1,37 @@
+name: QuickNick
+version: '0.1.0'
+main: net.kore.qnick.QNick
+api-version: '1.20'
+prefix: "QNick"
+author: Kore
+authors:
+  - Nova
+depend:
+  - CommandAPI
+description: "QuickNick, simple and fast way to use nicknames"
+permissions:
+  qnick.command.nick.set:
+    description: "Allows you to set your nickname"
+    default: op
+  qnick.command.nick.setother:
+    description: "Allows you to set other's nicknames"
+    default: op
+  qnick.command.nick.get:
+    description: "Allows you to get your nickname"
+    default: op
+  qnick.command.nick.getother:
+    description: "Allows you to get other's nicknames"
+    default: op
+  qnick.command.nick.list:
+    description: "Lists all nicknames"
+    default: op
+  qnick.command.nick.clear:
+    description: "Allows you to clear your nickname"
+    default: op
+  qnick.command.nick.clearother:
+    description: "Allows you to clear other's nicknames"
+    default: op
+
+  qnick.command.reload:
+    description: "Reload plugin config"
+    default: op
