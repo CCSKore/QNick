@@ -47,3 +47,6 @@ SQL is a form of Database storage which can be accessed from multiple servers, i
 Here are some instructions for some GitHub things some people may want to mess with
 
 ## Getting development builds
+Visit [here](https://github.com/CCSKore/QNick/releases/tag/latest) to get the latest development builds, however, BE WARNED
+
+These builds are not stable whatsoever, do NOT use them on a production server, I am not responsible for any damage the development versions do
