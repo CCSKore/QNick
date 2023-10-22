@@ -23,7 +23,7 @@ publishing {
 }
 
 group = 'net.kore'
-version = '1.0-SNAPSHOT'
+version = '0.1.0'
 
 repositories {
     mavenCentral()
@@ -68,5 +68,11 @@ processResources {
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
         expand props
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'net.kore.qnick.NotRunnable'
     }
 }
