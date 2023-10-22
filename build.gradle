@@ -16,6 +16,7 @@ publishing {
     }
     publications {
         gpr(MavenPublication) {
+            artifactId = 'qnick'
             from(components.java)
         }
     }
