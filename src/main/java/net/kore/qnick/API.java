@@ -2,12 +2,14 @@ package net.kore.qnick;
 
 import net.kore.qnick.utils.Nickname;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * <h2>API class</h2>
@@ -27,6 +29,9 @@ public class API implements QNickAPI {
      */
     @Override
     public Player getPlayerFromNick(Component nick) {
+        if (QNick.getSQL() != null) {
+            return Bukkit.getPlayer(QNick.getSQL().getUUID(MiniMessage.miniMessage().serialize(nick)));
+        }
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (!Nickname.has(player)) {
                 continue;
@@ -35,6 +40,40 @@ public class API implements QNickAPI {
                 continue;
             }
             return player;
+        }
+        return null;
+    }
+
+    @Override
+    public UUID getUUIDFromNick(Component nick) {
+        if (QNick.getSQL() != null) {
+            return QNick.getSQL().getUUID(MiniMessage.miniMessage().serialize(nick));
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!Nickname.has(player)) {
+                continue;
+            }
+            if (!Objects.equals(Nickname.get(player), nick)) {
+                continue;
+            }
+            return player.getUniqueId();
+        }
+        return null;
+    }
+
+    @Override
+    public UUID getUUIDFromNick(String nick) {
+        if (QNick.getSQL() != null) {
+            return QNick.getSQL().getUUID(nick);
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!Nickname.has(player)) {
+                continue;
+            }
+            if (!Objects.equals(Nickname.get(player), MiniMessage.miniMessage().deserialize(nick))) {
+                continue;
+            }
+            return player.getUniqueId();
         }
         return null;
     }

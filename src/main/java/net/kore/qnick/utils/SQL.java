@@ -26,7 +26,7 @@ public class SQL {
     }
 
     public String getNick(UUID uuid, boolean cache) {
-        checkConnection();
+        refreshConnection();
         String struuid = uuid.toString();
         String nick;
         if (cache && nicknames.get(struuid) != null) {
@@ -36,8 +36,6 @@ public class SQL {
             return null;
         }
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
             String sql = "SELECT nick FROM "+TABLE+" WHERE uuid = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, struuid);
@@ -54,6 +52,7 @@ public class SQL {
 
             resultSet.close();
             preparedStatement.close();
+            connection.close();
             return nick;
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,8 +60,32 @@ public class SQL {
         }
     }
 
+    public UUID getUUID(String nick) {
+        refreshConnection();
+        UUID uuid = null;
+        try {
+            String sql = "SELECT uuid FROM "+TABLE+" WHERE uuid = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, nick);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                uuid = UUID.fromString(resultSet.getString("uuid"));
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+            return uuid;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public boolean setNick(UUID uuid, String newNick) {
-        checkConnection();
+        refreshConnection();
         String struuid = uuid.toString();
         nicknames.remove(struuid);
         nicknames.put(struuid, newNick);
@@ -81,6 +104,7 @@ public class SQL {
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
+                connection.close();
                 resultSet.close();
                 checkStatement.close();
 
@@ -94,6 +118,7 @@ public class SQL {
 
                 int rowsAffected = insertStatement.executeUpdate();
 
+                connection.close();
                 resultSet.close();
                 checkStatement.close();
 
@@ -106,7 +131,7 @@ public class SQL {
     }
 
     public boolean removeNick(UUID uuid) {
-        checkConnection();
+        refreshConnection();
         String struuid = uuid.toString();
         nicknames.remove(struuid);
         nicknames.put(struuid, "");
@@ -117,6 +142,7 @@ public class SQL {
 
             int rowsAffected = deleteStatement.executeUpdate();
 
+            connection.close();
             deleteStatement.close();
 
             return rowsAffected > 0;
@@ -131,7 +157,7 @@ public class SQL {
     }
 
     public boolean hasNick(UUID uuid, boolean cache) {
-        checkConnection();
+        refreshConnection();
         String struuid = uuid.toString();
         if (cache && nicknames.get(struuid) != null) {
             return true;
@@ -149,10 +175,12 @@ public class SQL {
             if (resultSet.next()) {
                 resultSet.close();
                 preparedStatement.close();
+                connection.close();
                 return true;
             } else {
                 resultSet.close();
                 preparedStatement.close();
+                connection.close();
                 return false;
             }
         } catch (Exception e) {
@@ -161,19 +189,13 @@ public class SQL {
         }
     }
 
+    private void refreshConnection() {
+        refreshConnection(DBURL, USERNAME, PASSWORD);
+    }
+
     private void refreshConnection(String dburl, String username, String password) {
         try {
             connection = DriverManager.getConnection(dburl, username, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void checkConnection() {
-        try {
-            if (connection.isClosed() || connection == null) {
-                refreshConnection(DBURL, USERNAME, PASSWORD);
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

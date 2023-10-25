@@ -24,7 +24,6 @@ public class Nickname {
         return QNick.getNickKey();
     }
 
-
     public static Component get(@NotNull Player player) {
         if (QNick.getSQL() != null) {
             String nick = QNick.getSQL().getNick(player.getUniqueId());
